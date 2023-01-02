@@ -33,6 +33,7 @@ function dropShapes(input, shapeCount) {
   };
   const moveSequence = input.trim();
   let move = 0;
+  let moveCycle = 0;
   let seenStates = {}
   let repeatedSequenceHeight = 0;
   let passedRepeatedSection = false;
@@ -47,7 +48,7 @@ function dropShapes(input, shapeCount) {
         passedRepeatedSection = true;
         const sequenceLength = s - seenStates[stateKey].start;
         const repetitionCount = Math.floor((shapeCount - 1 - s) / sequenceLength);
-        console.log(`Step ${s} repeating from ${seenStates[stateKey].start}, move: ${move}, sequenceLength: ${sequenceLength}, repetitionCount: ${repetitionCount}`);
+        console.log(`Step ${s} repeating from ${seenStates[stateKey].start}, move: ${move}, sequenceLength: ${sequenceLength}, repetitionCount: ${repetitionCount}, moveCycle: ${moveCycle}`);
         repeatedSequenceHeight = (getHeight(board) - seenStates[stateKey].height) * repetitionCount;
         s += repetitionCount * sequenceLength;
         console.log('Step after skip:', s);
@@ -76,6 +77,9 @@ function dropShapes(input, shapeCount) {
       }
       if (!sideMoveBlocked) {
         location = sideMoveLoc;
+      }
+      if (move + 1 >= moveSequence.length) {
+        moveCycle += 1;
       }
       move = (move + 1)%moveSequence.length;
       let downMoveLoc = {x: location.x, y: location.y - 1};
